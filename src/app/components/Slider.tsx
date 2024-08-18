@@ -1,37 +1,60 @@
 'use client'
-import { useQuery } from '@tanstack/react-query';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { getPhotos } from '../apis/getPhotos';
 import Image from 'next/image';
+import { Description } from './Description';
 
 export const Slider = () => {
-    const {data, isLoading} = useQuery({queryKey: ['photos'], queryFn: getPhotos})
-    // const {isLoading, error, data} = useQuery(['photos'], getPhotos); 
-    // console.log((!isLoading && data) ?? data[0])
-// Render the data 
-if(!isLoading && data) 
-console.log(data?.map((i:any)=> i.url))
-//   if (data && !isLoading) return <div>
-//     {data?.map((i:any)=> i.url)}
-//   </div>; 
-//   if (error) return <div>Error: {error.message}</div>; 
-  return (
-    <div className='grid place-items-center grid-cols-2 w-full mx-auto max-w-5xl shadow-2xl rounded-2xl'>
-        <div className='w-full flex justify-center items-center gap-4 transition-transform ease-in-out duration-500 rounded-2xl'>
-        Slider
-        {
-            (data && !isLoading) ? data?.map((pic:any)=> (
-                <div key={pic.id}>
-                    {pic.url}
-                    <Image 
-                    src={pic.url}
-                    // src={"https://via.placeholder.com/150/92c952"} 
-                    alt='' width={400} height={400} 
-                    className='w-full h-full object-cover rounded-tl-3xl rounded-bl-3x'/>
-                </div>
-            ) ) : ''
+    const [activeImg, setActiveImg] = useState(0)
+    const clickNext = () => {
+        activeImg === data.length - 1
+            ? setActiveImg(0)
+            : setActiveImg(activeImg + 1)
+    }
+    const clickPrev = () => {
+        activeImg === 0
+            ? setActiveImg(data.length - 1)
+            : setActiveImg(activeImg - 1)
+    }
+    // const {data, isLoading} = useQuery({queryKey: ['photos'], queryFn: getPhotos})
+    const [data, setData] = useState([])
+    useEffect(() => {
+        const res = getPhotos().then(r => {
+            setData(r.slice(1, 10))
+            console.log(r.slice(0, 10), r.splice(0, 10))
         }
+        )
+        // console.log(res.then(r=>console.log([r.slice(1,10)])))
+        // return ()=> {res}
+    }, [])
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            clickNext();
+        }, 5000);
+        return () => {
+            clearTimeout(timer);
+        }
+    }, [activeImg])
+    return (
+        <div className='grid place-items-center grid-cols-1 w-full mx-auto max-w-5xl shadow-2xl rounded-2xl'>
+            <div className='w-full flex justify-center items-center gap-3 transition-transform ease-in-out duration-500 rounded-2xl'>
+                {
+                    data && data?.map((pic: any, idx: any) => (
+                        <div key={idx}
+                            className={`${idx === activeImg ? "block w-full h-[80vh] object-cover transition-all duration-500 ease-in-out" : "hidden"}`}
+                        >
+                            <Image className='w-full h-full object-cover rounded-tl-3xl rounded-bl-3x'
+                                src={pic.url}
+                                //  fill
+                                width="100"
+                                height="100"
+                                alt='img'
+                            />
+                        </div>
+                    ))
+                }
+                <Description data={data} clickPrev={clickPrev} clickNext={clickNext} activeImgIndex={activeImg} />
+            </div>
         </div>
-    </div>
-  )
+    )
 }
