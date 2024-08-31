@@ -102,7 +102,7 @@ const Home  =  async() => {
           </p>
         </a>
       </div>
-<div className="my-10">
+<div className="my-4">
 <Carousel photos={photos} />
 </div>
     </main></>

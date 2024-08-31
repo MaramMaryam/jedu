@@ -142,6 +142,7 @@
 import { useState, useEffect, FC } from 'react';
 import Image from 'next/image';
 import { Description } from '../components/Description';
+
 import { Photo } from './types';
 
 

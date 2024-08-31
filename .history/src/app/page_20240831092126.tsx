@@ -5,7 +5,7 @@ import NavBar from "./components/NavBar";
 import Slider from "./components/Slider";
 // import { Photo } from "./components/types";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPhotos } from "./apis/getPhotos";
+import { fetchPhotos, getPhotos } from "./apis/getPhotos";
 import { NextPage } from "next";
 import { useState } from "react";
 import Carousel from "./components/Carousel";
@@ -102,7 +102,7 @@ const Home  =  async() => {
           </p>
         </a>
       </div>
-<div className="my-10">
+<div>
 <Carousel photos={photos} />
 </div>
     </main></>

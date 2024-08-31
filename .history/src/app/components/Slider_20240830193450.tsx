@@ -140,8 +140,10 @@
 
 // pages/index.tsx
 import { useState, useEffect, FC } from 'react';
+import { NextPage } from 'next';
 import Image from 'next/image';
 import { Description } from '../components/Description';
+import { getPhotos } from '../apis/getPhotos';
 import { Photo } from './types';
 
 

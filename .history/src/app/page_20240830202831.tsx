@@ -5,11 +5,20 @@ import NavBar from "./components/NavBar";
 import Slider from "./components/Slider";
 // import { Photo } from "./components/types";
 import { useQuery } from "@tanstack/react-query";
-import { fetchPhotos } from "./apis/getPhotos";
+import { fetchPhotos, getPhotos } from "./apis/getPhotos";
 import { NextPage } from "next";
 import { useState } from "react";
 import Carousel from "./components/Carousel";
 
+
+// export const getServerSideProps = async () => {
+//   const photos = await getPhotos();
+//   return {
+//     props: {
+//       photos: photos.slice(1, 10), // Get the first 10 photos
+//     },
+//   };
+// };
 interface Photo {
   albumId: number;
   id: number;
@@ -17,9 +26,20 @@ interface Photo {
   url: string;
   thumbnailUrl: string;
 }
-
+// const fetchPhotos = async (): Promise<Photo[]> => {
+//   const res = await fetch('https://jsonplaceholder.typicode.com/photos?_limit=10');
+//   if (!res.ok) {
+//     throw new Error('Failed to fetch photos');
+//   }
+//   return res.json();
+// };
 const Home  =  async() => {
   const photos = await fetchPhotos();
+  // const { data, isLoading, error } = useQuery({
+  //   queryKey: ['photos'],
+  //   queryFn: getPhotos,
+  // });
+  // console.log(data?.slice(1, 10))
   
   return (
     <>
@@ -102,8 +122,8 @@ const Home  =  async() => {
           </p>
         </a>
       </div>
-<div className="my-10">
-<Carousel photos={photos} />
+<div>
+<Carousel photos={photos} photos={[]} />
 </div>
     </main></>
   );
