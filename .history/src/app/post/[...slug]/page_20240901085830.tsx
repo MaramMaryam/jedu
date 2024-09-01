@@ -1,0 +1,24 @@
+// 'use client'
+
+import React, { FC } from "react";
+import { TextInputBox } from '../../components/forms/TextInputBox';
+import { Router } from "next/router";
+import { fetchPost, fetchPosts } from "../../apis/getPosts";
+import Posts from "../../components/Posts";
+import { useRouter } from 'next/router';
+
+    const Post : FC<{ params: { slug: string } }> = ({ params }) => {
+      const { slug } = params;
+      // const router = useRouter();
+      // const { id } = router.query;
+      console.log(slug)
+        const post =  fetchPost(slug);
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-800">aaa
+       <Posts posts={post} />
+
+  hh
+  </div>
+  );
+}
+export default Post

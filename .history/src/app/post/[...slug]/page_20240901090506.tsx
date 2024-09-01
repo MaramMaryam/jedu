@@ -1,0 +1,28 @@
+// 'use client'
+
+import React, { FC } from "react";
+import { TextInputBox } from '../../components/forms/TextInputBox';
+import { Router } from "next/router";
+import { fetchPost, fetchPosts } from "../../apis/getPosts";
+import Posts from "../../components/Posts";
+import { useRouter } from 'next/router';
+
+    const Post : FC<{ params: { slug: string } }> = async({ params }) => {
+      const { slug } = params;
+      // const router = useRouter();
+      // const { id } = router.query;
+      console.log(slug)
+        const post = await fetchPost(slug);
+        console.log(post)
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-800">
+       <div  className="bg-gray-200 p-6 rounded shadow-xl w-full max-w-5xl mx-auto my-4">
+          <span className="font-extrabold text-xl">{post.title}</span>
+          <p className="mb-2">{post.body}</p>
+
+          <Link type="button" className="border rounded-md border-amber-700 px-3 py-1 " href={Routes.posts.POSTS+`/${item.id}`}> continue... </Link>
+          </div>
+  </div>
+  );
+}
+export default Post
