@@ -1,0 +1,10 @@
+import * as Yup from 'yup';
+
+export const loginSchema = Yup.object().shape({
+  mobile: Yup.string()
+    .email('Invalid email address')
+    .required('Required'),
+  otp: Yup.string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Required'),
+});
