@@ -1,13 +1,12 @@
-
 "use client"
 import { FC, useState } from 'react';
 import { Photo } from './types';
 
 interface SliderProps {
-    photos: Photo[];
-  }
+  photos: Photo[];
+}
 
-const Carousel: FC<SliderProps> = ({ photos })  => {
+const Carousel: FC<SliderProps> = ({ photos }) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const imagesPerSlide = 6; // Number of images to display per slide

@@ -1,36 +1,25 @@
 'use client'
 
-// pages/index.tsx
 import { useState, useEffect, FC } from 'react';
 import Image from 'next/image';
 import { Description } from '../components/Description';
 import { Photo } from './types';
 
-  
-  interface SliderProps {
-    photos: Photo[];
-  }
+interface SliderProps {
+  photos: Photo[];
+}
 
-
-const Slider: FC<SliderProps> = ({ photos })  => {
+const Slider: FC<SliderProps> = ({ photos }) => {
   const [activeImg, setActiveImg] = useState(0);
 
   const clickNext = () => {
     setActiveImg((prev) => (prev + 1) % photos.length)
-    // (prev === photos?.length - 1 ? 0 : prev + 1));
   };
 
   const clickPrev = () => {
     setActiveImg((prev) => (prev - 1 + photos.length) % photos.length)
-        // (prev === 0 ? photos?.length - 1 : prev - 1));
   };
-//   const handleNext = () => {
-//     setCurrentIndex((prevIndex) => (prevIndex + 1) % photos.length);
-//   };
 
-//   const handlePrev = () => {
-//     setCurrentIndex((prevIndex) => (prevIndex - 1 + photos.length) % photos.length);
-//   };
   useEffect(() => {
     const timer = setTimeout(() => {
       clickNext();
@@ -48,11 +37,10 @@ const Slider: FC<SliderProps> = ({ photos })  => {
         {photos?.map((pic, idx) => (
           <div
             key={pic.id}
-            className={`${
-              idx === activeImg
+            className={`${idx === activeImg
                 ? 'block w-full h-[80vh] object-cover transition-all duration-500 ease-in-out'
                 : 'hidden'
-            }`}
+              }`}
           >
             <Image
               className="w-full h-full object-cover rounded-tl-3xl rounded-bl-3xl"

@@ -1,6 +1,6 @@
 
 'use client'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form } from 'formik';
 import { loginOtpSchema } from "./validation";
 import { useRouter } from "next/navigation";
@@ -10,19 +10,41 @@ import { Routes } from "../utils/endPoinrs";
 
 interface otpNum {
   mobile: string;
-  otpNumber:any
+  otpNumber: any
 }
 
 export default function LoginOtp() {
   const [otpSent, setOtpSent] = useState(false);
-  const [generatedOtp, setGeneratedOtp] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState<any>();
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const initVal: otpNum = { mobile: '09194813585', otpNumber:generatedOtp };
+  const initVal: otpNum = { mobile: '09194813585', otpNumber: generatedOtp };
 
-  const handleVerifyOtp = (value:otpNum) => {
+  useEffect(() => {
+    let timer: any;
+    if (isTimerRunning && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsTimerRunning(false);
+      setGeneratedOtp(null); // Clear OTP after timeout
+      setOtpSent(false); // Reset OTP sent state
+      alert("OTP has expired. Generating a new OTP...");
+      // Automatically send a new OTP when the timer expires
+      handleSendOtp(initVal);
+    }
+    return () => clearInterval(timer);
+  }, [isTimerRunning, timeLeft]);
+
+  const handleVerifyOtp = (value: otpNum) => {
     // Simulate OTP verification
+    setLoading(true);
     console.log(value, value.otpNumber)
+
     if (value.otpNumber === generatedOtp) {
       console.log("OTP verified successfully");
       router.push(Routes.posts.POSTS); // Navigate to the posts page
@@ -30,13 +52,19 @@ export default function LoginOtp() {
       console.error("Invalid OTP");
       alert("Invalid OTP. Please try again.");
     }
+    setLoading(false);
   };
   const handleSendOtp = (values: otpNum) => {
-    console.log("Sending OTP to:", values.mobile); // Log mobile number
+
+    console.log("Sending OTP to:", values.mobile);
+
     const newOtp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a random 6-digit OTP
     setGeneratedOtp(newOtp);
-    console.log(`OTP sent to ${values.mobile}: ${newOtp}`); // Log generated OTP
     setOtpSent(true);
+    console.log(`OTP sent to ${values.mobile}: ${newOtp}`);
+    setIsTimerRunning(true);
+    setTimeLeft(60);
+
   };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-800">
@@ -63,15 +91,16 @@ export default function LoginOtp() {
                   placeholder="Enter OTP"
                 />
                 <span className="text-sm text-red-400">youe code is: {generatedOtp}</span>
+                <span>{timeLeft}</span>
               </>
             )}
-            <button
+            <button disabled={loading}
               type="submit"
               className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
             >
               {otpSent ? 'Verify OTP' : 'Send OTP'}
             </button>
-          <Link href={Routes.auth.LOGIN} className="text-sm text-blue-700 "> login </Link>
+            <Link href={Routes.auth.LOGIN} className="text-sm text-blue-700 "> login </Link>
           </Form>
         )}
       </Formik>

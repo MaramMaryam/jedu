@@ -1,1 +1,0 @@
-src/app/post/page.tsx
